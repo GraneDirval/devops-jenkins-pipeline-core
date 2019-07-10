@@ -124,9 +124,9 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
     }
 
 
-    def awsCodecommitLink = prLinkCallback(PULL_REQUEST_ID);
+    def rawPrLink = prLinkCallback(PULL_REQUEST_ID);
 
-    def prLink = "<$awsCodecommitLink|PR-${PULL_REQUEST_ID}>"
+    def slackPrLink = "<$rawPrLink|PR-${PULL_REQUEST_ID}>"
 
 
     if (!isInReviewerList(SLACK_USER_NAME, primaryReviewerList)) {
@@ -142,7 +142,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       if (secondaryReviewer) {
 
         mergedReviewerList << secondaryReviewer;
-        jiraComment body: "${secondaryReviewer[0]} was selected as reviewer for PR-$PULL_REQUEST_ID", issueKey: JIRA_ISSUE_KEY
+        jiraComment body: "${secondaryReviewer[0]} was selected as reviewer for PR-$PULL_REQUEST_ID\n${rawPrLink}", issueKey: JIRA_ISSUE_KEY
 
 
       } else {
@@ -156,12 +156,12 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
           def prResolutionLink = "<${BUILD_URL}input|here>"
 
           sendMessageToReviewers(
-              "$prLink (${JIRA_ISSUE_KEY}) waiting for your approval ${prResolutionLink}.",
+              "$slackPrLink (${JIRA_ISSUE_KEY}) waiting for your approval ${prResolutionLink}.",
               mergedReviewerList
           )
 
           sendMessageToSlack(
-              "$prLink (${JIRA_ISSUE_KEY}) have no conflicts.\nWaiting for approval of reviewer.",
+              "$slackPrLink (${JIRA_ISSUE_KEY}) have no conflicts.\nWaiting for approval of reviewer.",
               SLACK_USER_NAME,
               "C0C0C0"
           )
@@ -191,7 +191,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
 
               if (response.pullRequest.pullRequestStatus == 'CLOSED') {
                 sendMessageToReviewers(
-                    "$prLink (${JIRA_ISSUE_KEY}) is already closed. No need to review.\nProbably it was manually merged by someone or JIRA issue status change was triggered multiple times.",
+                    "$slackPrLink (${JIRA_ISSUE_KEY}) is already closed. No need to review.\nProbably it was manually merged by someone or JIRA issue status change was triggered multiple times.",
                     mergedReviewerList
                 )
 
@@ -202,7 +202,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
                 if (isWorkingTime()) {
                   println "Sending reminder"
                   sendMessageToReviewers(
-                      "Reminder: ${prLink} (${JIRA_ISSUE_KEY}) is waiting for your approval ${prResolutionLink}.",
+                      "Reminder: ${slackPrLink} (${JIRA_ISSUE_KEY}) is waiting for your approval ${prResolutionLink}.",
                       mergedReviewerList
                   )
                 } else {
@@ -215,7 +215,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       } catch (Exception e) {
 
         sendMessageToSlack(
-            "Your $prLink (${JIRA_ISSUE_KEY}) is declined by reviewer.",
+            "Your $slackPrLink (${JIRA_ISSUE_KEY}) is declined by reviewer.",
             SLACK_USER_NAME,
             "FF0000"
         )
