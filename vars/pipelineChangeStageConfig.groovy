@@ -37,7 +37,7 @@ def call(APP_ID, BILLING_API_HOST, DB_UPDATE_TYPE, buildCallback) {
 
       def appDirectory = getAppWorkspacePath(APP_ID)
 
-      def stageBuild = buildCallback(APP_ID, BILLING_API_HOST, DB_UPDATE_TYPE, buildVariables);
+      def stageBuild = buildCallback(APP_ID, commitHash, appDirectory, buildVariables);
 
     }
   }
