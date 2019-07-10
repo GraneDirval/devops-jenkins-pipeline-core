@@ -123,6 +123,12 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       return
     }
 
+
+    def awsCodecommitLink = prLinkCallback(PULL_REQUEST_ID);
+
+    def prLink = "<$awsCodecommitLink|PR-${PULL_REQUEST_ID}>"
+
+
     if (!isInReviewerList(SLACK_USER_NAME, primaryReviewerList)) {
 
       println "Trying to assign secondary reviewer who is not an author as Code Reviewer"
@@ -136,14 +142,13 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       if (secondaryReviewer) {
 
         mergedReviewerList << secondaryReviewer;
-        jiraComment body: "${secondaryReviewer[0]} is selected as reviewer for this issue", issueKey: JIRA_ISSUE_KEY
+        jiraComment body: "${secondaryReviewer[0]} was selected as reviewer for PR-$PULL_REQUEST_ID", issueKey: JIRA_ISSUE_KEY
 
 
       } else {
         println "No secondary reviewers are present"
       }
 
-      String prLink = prLinkCallback(PULL_REQUEST_ID);
 
       try {
         stage('Waiting for Approval') {
