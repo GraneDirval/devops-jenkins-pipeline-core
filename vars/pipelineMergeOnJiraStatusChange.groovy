@@ -142,7 +142,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       if (secondaryReviewer) {
 
         mergedReviewerList << secondaryReviewer;
-        jiraComment body: "${secondaryReviewer[0]} was selected as reviewer for PR-$PULL_REQUEST_ID\n${rawPrLink}", issueKey: JIRA_ISSUE_KEY
+        jiraComment body: "${secondaryReviewer[0]} was selected as reviewer for PR-$PULL_REQUEST_ID.\n${rawPrLink}", issueKey: JIRA_ISSUE_KEY
 
 
       } else {
