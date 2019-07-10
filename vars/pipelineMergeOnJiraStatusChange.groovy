@@ -267,7 +267,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
 
       }
 
-      //sh "git push origin HEAD:stage"
+      sh "git push origin HEAD:stage"
       println "Pushed successfully";
       jiraTransitionIssueByName(JIRA_ISSUE_KEY, "Done")
 
