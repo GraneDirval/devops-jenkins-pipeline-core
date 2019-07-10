@@ -19,7 +19,7 @@ def call(awsProfileName, APP_ID, BILLING_API_HOST, DB_UPDATE_TYPE, buildCallback
       }
       expression = null
 
-      def PRInfo = executeAWSCliCommand("codecommit", "get-pull-request", ["pull-request-id": prId, "profile-name": awsProfileName])
+      def PRInfo = executeAWSCliCommand("codecommit", "get-pull-request", ["pull-request-id": prId, "profile": awsProfileName])
 
       commitHash = PRInfo.pullRequest.pullRequestTargets[0].sourceCommit;
 
