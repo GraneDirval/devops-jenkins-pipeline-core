@@ -90,7 +90,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
         sh "git merge origin/stage --no-commit";
       } catch (Exception e) {
         jiraComment body: "Cannot merge PR-${PULL_REQUEST_ID}.\nPlease resolve branch conflicts.", issueKey: JIRA_ISSUE_KEY
-        jiraTransitionIssueByName(JIRA_ISSUE_KEY, "Merge Failed")
+        jiraTransitionIssueByName(JIRA_ISSUE_KEY, "Changes Requested")
 
         sendMessageToSlack(
             "Cannot merge PR-${PULL_REQUEST_ID} (${JIRA_ISSUE_KEY}).\nPlease resolve branch conflicts.",
@@ -242,7 +242,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       } catch (Exception e) {
 
         jiraComment body: "Cannot merge PR-${PULL_REQUEST_ID}.\nPlease resolve branch conflicts.", issueKey: JIRA_ISSUE_KEY
-        jiraTransitionIssueByName(JIRA_ISSUE_KEY, "Merge Failed")
+        jiraTransitionIssueByName(JIRA_ISSUE_KEY, "Changes Requested")
 
         sendMessageToSlack(
             "Cannot merge PR-${PULL_REQUEST_ID} (${JIRA_ISSUE_KEY}).\nPlease resolve branch conflicts.",
