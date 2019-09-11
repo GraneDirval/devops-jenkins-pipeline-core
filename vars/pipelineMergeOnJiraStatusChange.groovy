@@ -128,20 +128,34 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
 
     def slackPrLink = "<$rawPrLink|PR-${PULL_REQUEST_ID}>"
 
+    def APP_ID = getAppId(PULL_REQUEST_ID, APP_PREFIX);
 
-    if (!isInReviewerList(SLACK_USER_NAME, primaryReviewerList)) {
+    def appReviewInfo = appReviewInfoRetrieve(APP_ID);
 
+    def skipReviewStep = (appReviewInfo && appReviewInfo.isReviewOk) || isInReviewerList(SLACK_USER_NAME, primaryReviewerList)
+
+
+    if (!skipReviewStep) {
 
       println "Trying to assign secondary reviewer who is not an author as Code Reviewer"
       List mergedReviewerList = primaryReviewerList;
 
-      def secondaryReviewer = findSecondaryReviewer(
+      def secondaryReviewer
+
+      if(appReviewInfo && appReviewInfo.selectedReviewer){
+        secondaryReviewer = appReviewInfo.selectedReviewer;
+        println("Reusing already selected reviewer")
+      }else{
+        println("Trying to select reviewer")
+        secondaryReviewer = findSecondaryReviewer(
           secondaryReviewerList,
           SLACK_USER_NAME
-      );
+        );
+      }
 
       if (secondaryReviewer) {
 
+        appReviewInfoStoreValue(APP_ID, 'selectedReviewer', secondaryReviewer);
         mergedReviewerList << secondaryReviewer;
         jiraComment body: "*${secondaryReviewer[0]}* was selected as reviewer for PR-$PULL_REQUEST_ID.\n${rawPrLink}", issueKey: JIRA_ISSUE_KEY
 
@@ -212,6 +226,9 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
               }
             }
           }
+
+          appReviewInfoStoreValue(APP_ID,'isReviewOk',true)
+
         }
       } catch (Exception e) {
 
