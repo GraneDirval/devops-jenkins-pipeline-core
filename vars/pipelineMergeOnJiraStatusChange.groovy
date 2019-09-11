@@ -1,4 +1,4 @@
-def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secondaryReviewerList, prLinkCallback) {
+def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secondaryReviewerList, prLinkCallback, APP_PREFIX) {
 
   node {
     currentBuild.displayName = "Issue $JIRA_ISSUE_KEY was updated"
@@ -130,6 +130,8 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
 
 
     if (!isInReviewerList(SLACK_USER_NAME, primaryReviewerList)) {
+
+      if(isReviewerAlready)
 
       println "Trying to assign secondary reviewer who is not an author as Code Reviewer"
       List mergedReviewerList = primaryReviewerList;
