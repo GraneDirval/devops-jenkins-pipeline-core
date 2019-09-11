@@ -31,11 +31,8 @@ def call(JIRA_ISSUE_KEY, DEFAULT_BILLING_API, APP_PREFIX, awsProfileName, repoNa
 
       stage('Build server') {
 
-        if (APP_PREFIX) {
-          APP_ID = "PR-" + pullRequestData.PULL_REQUEST_ID + "-" + APP_PREFIX
-        } else {
-          APP_ID = "PR-" + pullRequestData.PULL_REQUEST_ID
-        }
+        APP_ID = getAppId(prInfo.PULL_REQUEST_ID, APP_PREFIX);
+
 
         STAGE_URL = "http://${APP_ID}.jenkins.playwing.com"
 

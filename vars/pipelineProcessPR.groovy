@@ -29,13 +29,7 @@ def call(CALLBACK_BODY, APP_PREFIX, BILLING_API_HOST, buildCallback, onCloseCall
       PULL_REQUEST_DESTINATION_REFERENCE = prInfo.PULL_REQUEST_DESTINATION_REFERENCE
       PULL_REQUEST_IS_MERGED = prInfo.PULL_REQUEST_IS_MERGED
 
-      if(APP_PREFIX){
-        APP_ID = "PR-" + prInfo.PULL_REQUEST_ID + "-" + APP_PREFIX
-      }else{
-        APP_ID = "PR-" + prInfo.PULL_REQUEST_ID
-
-      }
-
+      APP_ID = getAppId(prInfo.PULL_REQUEST_ID, APP_PREFIX);
 
       currentBuild.displayName = "PR ${prInfo.PULL_REQUEST_ID} ${prInfo.NOTIFICATION_TYPE}D ${APP_PREFIX}"
 
