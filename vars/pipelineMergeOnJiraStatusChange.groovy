@@ -311,6 +311,7 @@ def sendMessageToReviewers(message, List reviewers) {
 }
 
 def sendMessageToSlack(message, slackUser, color) {
+  print "Sending message to $slackUser";
   slackSend color: color, message: message, channel: "@${slackUser}"
 }
 
