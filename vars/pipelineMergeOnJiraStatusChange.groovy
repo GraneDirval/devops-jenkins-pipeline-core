@@ -147,7 +147,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       def secondaryReviewer
 
       if(appReviewInfo && appReviewInfo.selectedReviewer){
-        secondaryReviewer = [appReviewInfo.selectedReviewer];
+        secondaryReviewer = appReviewInfo.selectedReviewer;
         println("Reusing already selected reviewer")
       }else{
         println("Trying to select reviewer")
