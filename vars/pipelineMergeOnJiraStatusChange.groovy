@@ -155,6 +155,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
           secondaryReviewerList,
           SLACK_USER_NAME
         );
+        println secondaryReviewer;
       }
 
       if (secondaryReviewer) {
