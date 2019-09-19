@@ -61,8 +61,12 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
       if (profiles.containsKey(JIRA_ISSUE_ASSIGNEE_EMAIL)) {
         def item = profiles[JIRA_ISSUE_ASSIGNEE_EMAIL]
         SLACK_USER_NAME = item.name
+      } else{
+        println("Slack user for email $JIRA_ISSUE_ASSIGNEE_EMAIL is not found");
       }
     }
+
+
 
     currentBuild.description = "Processing PR-$PULL_REQUEST_ID.<br>"
 
