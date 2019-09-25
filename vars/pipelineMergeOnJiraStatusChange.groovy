@@ -150,7 +150,7 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
         secondaryReviewer = appReviewInfo.selectedReviewer;
         println("Reusing already selected reviewer")
       }else{
-        println("Trying to select reviewer")
+        println("Trying to select reviewer. Slack name: $SLACK_USER_NAME, Jira assignee: $JIRA_ISSUE_ASSIGNEE_EMAIL")
         secondaryReviewer = findSecondaryReviewer(
           secondaryReviewerList,
           SLACK_USER_NAME
