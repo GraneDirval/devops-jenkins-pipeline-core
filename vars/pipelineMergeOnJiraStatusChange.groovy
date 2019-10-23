@@ -74,8 +74,10 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
 
     stage('Pre-review merging') {
 
+      def seconds = 60*60*24*30
+
       sh 'git init'
-      sh 'git config credential.helper cache'
+      sh "git config credential.helper 'cache --timeout=$seconds'"
 
       checkout changelog: true, poll: false, scm: [
           $class                           : 'GitSCM',
