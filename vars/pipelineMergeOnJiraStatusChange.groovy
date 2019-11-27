@@ -1,4 +1,4 @@
-def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secondaryReviewerList, prLinkCallback, APP_PREFIX) {
+def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secondaryReviewerList, prLinkCallback, APP_PREFIX, onApproveActionCallback) {
 
   node {
     currentBuild.displayName = "Issue $JIRA_ISSUE_KEY was updated"
@@ -294,11 +294,18 @@ def call(awsProfileName, gitRepo, repoName, List primaryReviewerList, List secon
 
       sh "git push origin HEAD:stage"
       println "Pushed successfully";
-      jiraTransitionIssueByName(JIRA_ISSUE_KEY, "Done")
 
-      jiraComment body: "Successfully merged PR-${PULL_REQUEST_ID}.", issueKey: JIRA_ISSUE_KEY
-      def slackComment = "Successfully merged PR-${PULL_REQUEST_ID} (${JIRA_ISSUE_KEY})."
-      slackSend color: 'good', message: slackComment, channel: "@${SLACK_USER_NAME}"
+
+      if(!onApproveActionCallback){
+        jiraTransitionIssueByName(JIRA_ISSUE_KEY, "Done")
+        jiraComment body: "Successfully merged PR-${PULL_REQUEST_ID}.", issueKey: JIRA_ISSUE_KEY
+        def slackComment = "Successfully merged PR-${PULL_REQUEST_ID} (${JIRA_ISSUE_KEY})."
+        slackSend color: 'good', message: slackComment, channel: "@${SLACK_USER_NAME}"
+      }else{
+        onApproveActionCallback(JIRA_ISSUE_KEY, PULL_REQUEST_ID, SLACK_USER_NAME);
+      }
+
+
       sh "git config --unset credential.helper"
 
     }
